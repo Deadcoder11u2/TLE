@@ -7,10 +7,10 @@ import html
 import cairo
 import os
 import time
-import gi
-gi.require_version('Pango', '1.0')
-gi.require_version('PangoCairo', '1.0')
-from gi.repository import Pango, PangoCairo
+# import gi
+# gi.require_version('Pango', '1.0')
+# gi.require_version('PangoCairo', '1.0')
+# from gi.repository import Pango, PangoCairo
 
 import discord
 import random
@@ -97,65 +97,65 @@ def get_gudgitters_image(rankings):
     WIDTH_NAME = 0.38*WIDTH
     LINE_HEIGHT = (HEIGHT - 2*BORDER_MARGIN)/(10 + HEADER_SPACING)
 
-    # Cairo+Pango setup
-    surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, WIDTH, HEIGHT)
-    context = cairo.Context(surface)
-    context.set_line_width(1)
-    context.set_source_rgb(*DISCORD_GRAY)
-    context.rectangle(0, 0, WIDTH, HEIGHT)
-    context.fill()
-    layout = PangoCairo.create_layout(context)
-    layout.set_font_description(Pango.font_description_from_string(','.join(FONTS) + ' 20'))
-    layout.set_ellipsize(Pango.EllipsizeMode.END)
+    # # Cairo+Pango setup
+    # surface = cairo.ImageSurface(cairo.FORMAT_ARGB32, WIDTH, HEIGHT)
+    # context = cairo.Context(surface)
+    # context.set_line_width(1)
+    # context.set_source_rgb(*DISCORD_GRAY)
+    # context.rectangle(0, 0, WIDTH, HEIGHT)
+    # context.fill()
+    # layout = PangoCairo.create_layout(context)
+    # layout.set_font_description(Pango.font_description_from_string(','.join(FONTS) + ' 20'))
+    # layout.set_ellipsize(Pango.EllipsizeMode.END)
 
-    def draw_bg(y, color_index):
-        nxty = y + LINE_HEIGHT
+    # def draw_bg(y, color_index):
+    #     nxty = y + LINE_HEIGHT
 
-        # Simple
-        context.move_to(BORDER_MARGIN, y)
-        context.line_to(WIDTH, y)
-        context.line_to(WIDTH, nxty)
-        context.line_to(0, nxty)
-        context.set_source_rgb(*ROW_COLORS[color_index])
-        context.fill()
+    #     # Simple
+    #     context.move_to(BORDER_MARGIN, y)
+    #     context.line_to(WIDTH, y)
+    #     context.line_to(WIDTH, nxty)
+    #     context.line_to(0, nxty)
+    #     context.set_source_rgb(*ROW_COLORS[color_index])
+    #     context.fill()
 
-    def draw_row(pos, username, handle, rating, color, y, bold=False):
-        context.set_source_rgb(*[x/255.0 for x in color])
+    # def draw_row(pos, username, handle, rating, color, y, bold=False):
+    #     context.set_source_rgb(*[x/255.0 for x in color])
 
-        context.move_to(BORDER_MARGIN, y)
+    #     context.move_to(BORDER_MARGIN, y)
 
-        def draw(text, width=-1):
-            text = html.escape(text)
-            if bold:
-                text = f'<b>{text}</b>'
-            layout.set_width((width - COLUMN_MARGIN)*1000) # pixel = 1000 pango units
-            layout.set_markup(text, -1)
-            PangoCairo.show_layout(context, layout)
-            context.rel_move_to(width, 0)
+    #     def draw(text, width=-1):
+    #         text = html.escape(text)
+    #         if bold:
+    #             text = f'<b>{text}</b>'
+    #         layout.set_width((width - COLUMN_MARGIN)*1000) # pixel = 1000 pango units
+    #         layout.set_markup(text, -1)
+    #         PangoCairo.show_layout(context, layout)
+    #         context.rel_move_to(width, 0)
 
-        draw(pos, WIDTH_RANK)
-        draw(username, WIDTH_NAME)
-        draw(handle, WIDTH_NAME)
-        draw(rating)
+    #     draw(pos, WIDTH_RANK)
+    #     draw(username, WIDTH_NAME)
+    #     draw(handle, WIDTH_NAME)
+    #     draw(rating)
 
-    #
+    # #
 
-    y = BORDER_MARGIN
+    # y = BORDER_MARGIN
 
-    # draw header
-    draw_row('#', 'Name', 'Handle', 'Points', SMOKE_WHITE, y, bold=True)
-    y += LINE_HEIGHT*HEADER_SPACING
+    # # draw header
+    # draw_row('#', 'Name', 'Handle', 'Points', SMOKE_WHITE, y, bold=True)
+    # y += LINE_HEIGHT*HEADER_SPACING
 
-    for i, (pos, name, handle, rating, score) in enumerate(rankings):
-        color = rating_to_color(rating)
-        draw_bg(y, i%2)
-        draw_row(str(pos), f'{name} ({rating if rating else "N/A"})', handle, str(score), color, y)
-        if rating and rating >= 3000:  # nutella
-            draw_row('', name[0], handle[0], '', BLACK, y)
-        y += LINE_HEIGHT
+    # for i, (pos, name, handle, rating, score) in enumerate(rankings):
+    #     color = rating_to_color(rating)
+    #     draw_bg(y, i%2)
+    #     draw_row(str(pos), f'{name} ({rating if rating else "N/A"})', handle, str(score), color, y)
+    #     if rating and rating >= 3000:  # nutella
+    #         draw_row('', name[0], handle[0], '', BLACK, y)
+    #     y += LINE_HEIGHT
 
     image_data = io.BytesIO()
-    surface.write_to_png(image_data)
+    # surface.write_to_png(image_data)
     image_data.seek(0)
     discord_file = discord.File(image_data, filename='gudgitters.png')
     return discord_file
